@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# svelte / vite build output
+web/.svelte-kit/
+web/build/
+web/.netlify/
+web/.vite/
+
+# logs / os
+*.log
+.DS_Store

@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "hello-svelte",
+    "title": "Hello, Svelte",
+    "date": "2026-07-01",
+    "tags": ["svelte", "intro"],
+    "excerpt": "Kicking off this demo blog built with SvelteKit and a JSON database.",
+    "body": "Welcome to the Exabyte demo blog.\n\nThis site is built with SvelteKit and stores every post in a single JSON file. No database server, no CMS — just a file the app reads at build time.\n\nIt is intentionally small so an AI agent can extend it during a live workshop."
+  },
+  {
+    "slug": "why-json-database",
+    "title": "Why a JSON \"database\"?",
+    "date": "2026-07-05",
+    "tags": ["architecture"],
+    "excerpt": "A single JSON file is enough for a demo blog — and easy for an agent to edit.",
+    "body": "For a workshop demo we do not need Postgres.\n\nA JSON file gives us version control, trivial diffs in a pull request, and zero infrastructure. When the AI agent adds a feature it can read and modify plain data the same way a developer would.\n\nTrade-offs: no concurrent writes and everything loads into memory. Fine for a blog with a handful of posts."
+  },
+  {
+    "slug": "the-agent-workflow",
+    "title": "The AI agent workflow",
+    "date": "2026-07-10",
+    "tags": ["ai", "workflow"],
+    "excerpt": "ClickUp task in, reviewed pull request out — an agent does the middle.",
+    "body": "The demo shows a full loop.\n\nA developer files a task in ClickUp. A LangGraph agent fetches it, writes a test, implements the change, opens a pull request, and comments the PR link back on the ticket.\n\nThe human stays in control: they review the diff and merge. Netlify deploys the result."
+  }
+]
