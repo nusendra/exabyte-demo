@@ -75,8 +75,15 @@ export async function writeTest(task: ClickUpTask, plan: Plan): Promise<FileChan
     {
       role: 'system',
       content:
-        'Write a vitest test file (TypeScript) for the described feature. ' +
-        'Import from the modules under web/src/lib. Return only the test file. ' +
+        'Write ONE runnable vitest test file (TypeScript). Rules:\n' +
+        '- Import every helper you use from "vitest" (describe, it, expect, beforeAll, ...).\n' +
+        '- Tests run in Node (no browser/DOM, no jsdom). Do not assert on rendered pages.\n' +
+        '- Prefer importing an exported function/value and asserting its behavior over ' +
+        'regex-matching file contents. Only add a new exported helper under web/src/lib ' +
+        'if the feature is pure logic (e.g. formatting, counts).\n' +
+        '- Use relative import paths that are CORRECT from the test file location, and that ' +
+        'exactly match where the implementation will put the code. State the target path in the plan.\n' +
+        '- Keep it small, self-consistent, and free of undefined references. Return only the test file.\n' +
         'It is fine if it fails until the implementation exists.'
     },
     {
@@ -101,8 +108,15 @@ export async function implement(
     {
       role: 'system',
       content:
-        'Implement the feature by returning full contents of the files to change. ' +
-        'Keep changes minimal and consistent with existing style. Do not edit test files.'
+        'Implement the feature by returning full contents of the files to change. Rules:\n' +
+        '- Keep changes minimal and consistent with existing style. Return WHOLE files.\n' +
+        '- Preserve unrelated existing markup/exports (e.g. do not delete a layout header/footer ' +
+        'when only styling is requested).\n' +
+        '- Make the implementation match the test exactly: same import paths, file locations, ' +
+        'and exported names the test references.\n' +
+        '- Do not weaken or delete assertions. You MAY fix a test file ONLY if it is broken ' +
+        'scaffolding (missing vitest imports, wrong relative path, syntax error) — keep its intent ' +
+        'and every assertion. If you fix the test, include it in the returned files.'
     },
     {
       role: 'user',
