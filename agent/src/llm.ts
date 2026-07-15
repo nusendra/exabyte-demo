@@ -83,6 +83,8 @@ export async function writeTest(task: ClickUpTask, plan: Plan): Promise<FileChan
         'if the feature is pure logic (e.g. formatting, counts).\n' +
         '- Use relative import paths that are CORRECT from the test file location, and that ' +
         'exactly match where the implementation will put the code. State the target path in the plan.\n' +
+        '- Put test files under web/src/lib/ (e.g. web/src/lib/<feature>.test.ts). NEVER create a ' +
+        'file whose name starts with "+" — SvelteKit reserves those and the build will fail.\n' +
         '- Keep it small, self-consistent, and free of undefined references. Return only the test file.\n' +
         'It is fine if it fails until the implementation exists.'
     },

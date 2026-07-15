@@ -6,7 +6,7 @@ describe('+layout.svelte', () => {
   let source: string;
 
   beforeAll(() => {
-    const layoutPath = resolve(__dirname, '+layout.svelte');
+    const layoutPath = resolve(__dirname, '../routes/+layout.svelte');
     source = readFileSync(layoutPath, 'utf-8');
   });
 

@@ -4,6 +4,7 @@ import {
   commitAndPush,
   createBranch,
   openPR,
+  runWebBuild,
   runWebTests,
   writeFiles
 } from './clients/repo.js';
@@ -56,12 +57,29 @@ export async function implementNode(state: AgentStateType) {
   return { changedFiles: all };
 }
 
-/** 6. Run the web test suite. */
+/** 6. Gate the PR: tests must pass AND the production build must succeed. */
 export async function verifyNode(state: AgentStateType) {
-  const { passed, output } = await runWebTests();
   const attempts = (state.attempts ?? 0) + 1;
-  console.log(passed ? '✅ tests pass' : `❌ tests fail (attempt ${attempts}/${config.maxAttempts})`);
-  return { testPassed: passed, testOutput: output, attempts };
+
+  const test = await runWebTests();
+  if (!test.passed) {
+    console.log(`❌ tests fail (attempt ${attempts}/${config.maxAttempts})`);
+    return { testPassed: false, testOutput: test.output, attempts };
+  }
+  console.log('✅ tests pass — building…');
+
+  const build = await runWebBuild();
+  if (!build.passed) {
+    console.log(`❌ build fails (attempt ${attempts}/${config.maxAttempts})`);
+    return {
+      testPassed: false,
+      testOutput: `Tests passed but the production build FAILED. Fix the build.\n\n${build.output}`,
+      attempts
+    };
+  }
+
+  console.log('✅ build ok');
+  return { testPassed: true, testOutput: test.output, attempts };
 }
 
 /** 7. Commit, push, and open the PR. */

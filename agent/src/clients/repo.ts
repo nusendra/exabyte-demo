@@ -46,6 +46,17 @@ export async function runWebTests(): Promise<{ passed: boolean; output: string }
   }
 }
 
+/** Run the production build. A PR must never open on a change that fails to build. */
+export async function runWebBuild(): Promise<{ passed: boolean; output: string }> {
+  try {
+    const res = await execa('npm', ['run', 'build'], { cwd: webDir, reject: false });
+    const output = `${res.stdout}\n${res.stderr}`.trim();
+    return { passed: res.exitCode === 0, output };
+  } catch (err) {
+    return { passed: false, output: String(err) };
+  }
+}
+
 /** Stage everything, commit, and push the branch. */
 export async function commitAndPush(branch: string, message: string): Promise<void> {
   await git(['add', '-A']);
