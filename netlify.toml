@@ -1,0 +1,9 @@
+# Netlify config (repo root — Netlify auto-reads it from here).
+# Monorepo: the SvelteKit app lives in web/.
+[build]
+  base = "web"              # run the build inside web/
+  command = "npm run build"
+  publish = "build"         # relative to base -> web/build
+
+[build.environment]
+  NODE_VERSION = "20"

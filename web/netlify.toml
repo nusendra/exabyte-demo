@@ -1,9 +1,0 @@
-# Netlify config for the SvelteKit blog.
-# In the Netlify UI set "Base directory" to `web` (or keep repo root and use base here).
-[build]
-  base = "web"
-  command = "npm run build"
-  publish = "build"
-
-[build.environment]
-  NODE_VERSION = "20"
