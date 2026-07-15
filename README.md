@@ -70,19 +70,33 @@ Needs the GitHub CLI authenticated for PRs: `gh auth login`.
 # Wiring test — no API key, no network, canned change, real vitest run:
 npm run dry-run
 
-# Real run against a ClickUp task:
+# Watch mode (recommended) — poll the ClickUp list and auto-run on new tickets:
+npm run watch
+
+# One-shot against a specific ClickUp task:
 npm run agent -- <clickup-task-id>
 
 # Real change but skip push/PR/ClickUp writes:
 DRY_RUN=1 npm run agent -- <clickup-task-id>
 ```
 
+### Watch mode
+`npm run watch` polls `CLICKUP_LIST_ID` every `POLL_INTERVAL_MS`. Any task in
+`CLICKUP_TRIGGER_STATUS` (default `to do`) is claimed by moving it to
+`CLICKUP_INPROGRESS_STATUS` (default `in progress`), then the graph runs it to a
+PR and `in review`. The status change prevents a task being processed twice.
+Status flow: **to do → in progress → in review → (merge) complete**.
+
 ### Env (`agent/.env`)
 | var | purpose |
 |-----|---------|
 | `DEEPSEEK_API_KEY` | DeepSeek model for plan/test/implement |
 | `CLICKUP_TOKEN` | ClickUp personal token (`pk_...`) |
-| `CLICKUP_TASK_STATUS_REVIEW` | status to move task to (default `in review`) |
+| `CLICKUP_LIST_ID` | list the watcher polls (watch mode) |
+| `CLICKUP_TASK_STATUS_REVIEW` | status to move task to after PR (default `in review`) |
+| `CLICKUP_TRIGGER_STATUS` | watch: status that triggers the agent (default `to do`) |
+| `CLICKUP_INPROGRESS_STATUS` | watch: claimed status (default `in progress`) |
+| `POLL_INTERVAL_MS` | watch: poll interval (default 15000) |
 | `AGENT_MODEL` | default `deepseek-chat`; `deepseek-reasoner` for harder tasks |
 | `BASE_BRANCH` | PR base (default `main`) |
 | `MAX_ATTEMPTS` | implement/verify retries (default 3) |

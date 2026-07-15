@@ -6,8 +6,11 @@ import type { FileChange } from '../state.js';
 
 const git = (args: string[]) => execa('git', args, { cwd: config.repoDir });
 
-/** Create and check out a fresh branch off the base branch. */
+/** Create and check out a fresh branch off the latest base branch. */
 export async function createBranch(name: string): Promise<void> {
+  await git(['checkout', config.baseBranch]);
+  // Best-effort: pull merged work so each task branches off up-to-date main.
+  await git(['pull', '--ff-only']).catch(() => {});
   await git(['checkout', '-B', name]);
 }
 

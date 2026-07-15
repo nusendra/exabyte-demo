@@ -29,6 +29,22 @@ export async function getTask(taskId: string): Promise<ClickUpTask> {
   };
 }
 
+/** List open tasks in a list filtered by status (e.g. the trigger status). */
+export async function getTasksByStatus(
+  listId: string,
+  status: string
+): Promise<{ id: string; title: string }[]> {
+  const url =
+    `${BASE}/list/${listId}/task?archived=false` +
+    `&statuses%5B%5D=${encodeURIComponent(status)}`;
+  const res = await fetch(url, { headers: headers() });
+  if (!res.ok) {
+    throw new Error(`ClickUp getTasksByStatus ${res.status}: ${await res.text()}`);
+  }
+  const data = (await res.json()) as { tasks: { id: string; name: string }[] };
+  return data.tasks.map((t) => ({ id: t.id, title: t.name }));
+}
+
 /** Move a task to a named status. */
 export async function setStatus(taskId: string, status: string): Promise<void> {
   const res = await fetch(`${BASE}/task/${taskId}`, {

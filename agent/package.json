@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "agent": "tsx src/index.ts",
+    "watch": "tsx src/watch.ts",
     "dry-run": "DRY_RUN=1 FAKE_LLM=1 tsx src/index.ts MOCK-1",
     "typecheck": "tsc --noEmit"
   },

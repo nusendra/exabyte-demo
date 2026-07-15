@@ -8,7 +8,12 @@ const defaultRepoDir = path.resolve(agentDir, '..', '..'); // monorepo root
 export const config = {
   deepseekApiKey: process.env.DEEPSEEK_API_KEY ?? '',
   clickupToken: process.env.CLICKUP_TOKEN ?? '',
+  clickupListId: process.env.CLICKUP_LIST_ID ?? '',
   reviewStatus: process.env.CLICKUP_TASK_STATUS_REVIEW ?? 'in review',
+  // watch mode: pick up tasks in this status, claim them by moving to inProgress.
+  triggerStatus: process.env.CLICKUP_TRIGGER_STATUS ?? 'to do',
+  inProgressStatus: process.env.CLICKUP_INPROGRESS_STATUS ?? 'in progress',
+  pollIntervalMs: Number(process.env.POLL_INTERVAL_MS ?? 15000),
   model: process.env.AGENT_MODEL ?? 'deepseek-chat',
   repoDir: process.env.REPO_DIR
     ? path.resolve(process.cwd(), process.env.REPO_DIR)
