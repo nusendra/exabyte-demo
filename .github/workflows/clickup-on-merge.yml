@@ -1,0 +1,49 @@
+name: ClickUp - complete on merge
+
+# When an agent PR is merged into main, mark its ClickUp task complete.
+# The agent names branches `agent/task-<clickup-task-id>`, so we read the id
+# from the merged branch name.
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  complete-task:
+    # Only for merged PRs coming from an agent branch.
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'agent/task-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract ClickUp task id from branch
+        id: task
+        run: |
+          branch="${{ github.event.pull_request.head.ref }}"
+          task_id="${branch#agent/task-}"
+          echo "id=$task_id" >> "$GITHUB_OUTPUT"
+          echo "Task id: $task_id"
+
+      - name: Set ClickUp status
+        env:
+          CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
+          DONE_STATUS: ${{ vars.CLICKUP_DONE_STATUS || 'complete' }}
+          TASK_ID: ${{ steps.task.outputs.id }}
+        run: |
+          echo "Marking task $TASK_ID -> $DONE_STATUS"
+          code=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
+            -X PUT "https://api.clickup.com/api/v2/task/${TASK_ID}" \
+            -H "Authorization: ${CLICKUP_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "{\"status\":\"${DONE_STATUS}\"}")
+          echo "HTTP $code"; cat /tmp/resp.json
+          test "$code" = "200"
+
+      - name: Comment merge on ClickUp task
+        env:
+          CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
+          TASK_ID: ${{ steps.task.outputs.id }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          curl -s -X POST "https://api.clickup.com/api/v2/task/${TASK_ID}/comment" \
+            -H "Authorization: ${CLICKUP_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "{\"comment_text\":\"✅ PR merged to main: ${PR_URL}\"}" > /dev/null
