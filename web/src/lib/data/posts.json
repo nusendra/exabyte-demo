@@ -22,5 +22,13 @@
     "tags": ["ai", "workflow"],
     "excerpt": "ClickUp task in, reviewed pull request out — an agent does the middle.",
     "body": "The demo shows a full loop.\n\nA developer files a task in ClickUp. A LangGraph agent fetches it, writes a test, implements the change, opens a pull request, and comments the PR link back on the ticket.\n\nThe human stays in control: they review the diff and merge. Netlify deploys the result."
+  },
+  {
+    "slug": "demo-blog-post",
+    "title": "Demo Blog Post",
+    "date": "2026-07-15",
+    "tags": ["demo", "ai"],
+    "excerpt": "A new demo blog post created by the AI agent to showcase automated content generation.",
+    "body": "This is a demo blog post created by an AI agent as part of a live workshop.\n\nThe agent read the task from ClickUp, added this entry to the JSON data file, wrote corresponding tests, and opened a pull request — all without human intervention.\n\nThis demonstrates how AI agents can automate routine content creation tasks while keeping a human in the loop for review and approval."
   }
 ]
