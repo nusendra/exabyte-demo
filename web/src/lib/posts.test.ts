@@ -52,4 +52,41 @@ describe('posts', () => {
     const slugs = posts.map((p) => p.slug);
     expect(slugs).toContain('demo-blog-post');
   });
+
+  // --- New blog post: 'Why Developers Should Learn About AI' ---
+
+  it('includes the new \'Why Developers Should Learn About AI\' post in getAllPosts', () => {
+    const posts = getAllPosts();
+    const newPost = posts.find((p) => p.slug === 'why-developers-should-learn-about-ai');
+    expect(newPost).toBeDefined();
+  });
+
+  it('the new post has all required fields', () => {
+    const post = getPost('why-developers-should-learn-about-ai');
+    expect(post).toBeDefined();
+    expect(post!.title).toBeTypeOf('string');
+    expect(post!.title.length).toBeGreaterThan(0);
+    expect(post!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(post!.tags).toBeInstanceOf(Array);
+    expect(post!.excerpt).toBeTypeOf('string');
+    expect(post!.excerpt.length).toBeGreaterThan(0);
+    expect(post!.body).toBeTypeOf('string');
+    expect(post!.body.length).toBeGreaterThan(0);
+  });
+
+  it('the new post has the correct title', () => {
+    const post = getPost('why-developers-should-learn-about-ai');
+    expect(post?.title).toBe('Why Developers Should Learn About AI');
+  });
+
+  it('finds the new post by its slug', () => {
+    const post = getPost('why-developers-should-learn-about-ai');
+    expect(post?.slug).toBe('why-developers-should-learn-about-ai');
+  });
+
+  it('the new post appears in the sorted list', () => {
+    const posts = getAllPosts();
+    const slugs = posts.map((p) => p.slug);
+    expect(slugs).toContain('why-developers-should-learn-about-ai');
+  });
 });

@@ -30,5 +30,13 @@
     "tags": ["demo", "ai"],
     "excerpt": "A new demo blog post created by the AI agent to showcase automated content generation.",
     "body": "This is a demo blog post created by an AI agent as part of a live workshop.\n\nThe agent read the task from ClickUp, added this entry to the JSON data file, wrote corresponding tests, and opened a pull request — all without human intervention.\n\nThis demonstrates how AI agents can automate routine content creation tasks while keeping a human in the loop for review and approval."
+  },
+  {
+    "slug": "why-developers-should-learn-about-ai",
+    "title": "Why Developers Should Learn About AI",
+    "date": "2026-07-20",
+    "tags": ["ai", "learning", "developers"],
+    "excerpt": "Understanding AI fundamentals is becoming essential for modern software development.",
+    "body": "Artificial intelligence is reshaping the software landscape.\n\nFrom code generation to intelligent debugging, AI tools are becoming part of every developer's toolkit. Learning how these models work, their strengths and limitations, allows developers to build better, safer, and more innovative applications.\n\nThis post explains why every developer should invest time in understanding AI beyond the hype."
   }
 ]
