@@ -1,13 +1,13 @@
-import { ChatAnthropic } from '@langchain/anthropic';
+import { ChatDeepSeek } from '@langchain/deepseek';
 import { z } from 'zod';
 import { config } from './config.js';
 import { readFile } from './clients/repo.js';
 import type { ClickUpTask, FileChange, Plan } from './state.js';
 
 function model() {
-  return new ChatAnthropic({
+  return new ChatDeepSeek({
     model: config.model,
-    apiKey: config.anthropicApiKey,
+    apiKey: config.deepseekApiKey,
     temperature: 0,
     maxTokens: 8000
   });

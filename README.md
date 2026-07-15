@@ -48,10 +48,10 @@ fetchTask → planChange → prepareBranch → writeTest → implement → verif
 ```
 
 - `fetchTask` — GET the task from ClickUp.
-- `planChange` — Claude plans the smallest verifiable change.
+- `planChange` — DeepSeek plans the smallest verifiable change.
 - `prepareBranch` — `git checkout -B agent/task-<id>`.
-- `writeTest` — Claude writes a vitest for the acceptance criteria.
-- `implement` — Claude edits `web/` source; retried with test output as feedback.
+- `writeTest` — DeepSeek writes a vitest for the acceptance criteria.
+- `implement` — DeepSeek edits `web/` source; retried with test output as feedback.
 - `verify` — runs `npm run test` in `web/`.
 - `createPR` — commit, push, `gh pr create`.
 - `updateClickup` — move task to review status + comment the PR link.
@@ -60,7 +60,7 @@ fetchTask → planChange → prepareBranch → writeTest → implement → verif
 ```bash
 cd agent
 npm install
-cp .env.example .env    # fill in ANTHROPIC_API_KEY + CLICKUP_TOKEN
+cp .env.example .env    # fill in DEEPSEEK_API_KEY + CLICKUP_TOKEN
 ```
 
 Needs the GitHub CLI authenticated for PRs: `gh auth login`.
@@ -80,10 +80,10 @@ DRY_RUN=1 npm run agent -- <clickup-task-id>
 ### Env (`agent/.env`)
 | var | purpose |
 |-----|---------|
-| `ANTHROPIC_API_KEY` | Claude model for plan/test/implement |
+| `DEEPSEEK_API_KEY` | DeepSeek model for plan/test/implement |
 | `CLICKUP_TOKEN` | ClickUp personal token (`pk_...`) |
 | `CLICKUP_TASK_STATUS_REVIEW` | status to move task to (default `in review`) |
-| `AGENT_MODEL` | default `claude-opus-4-8`; e.g. `claude-sonnet-5` to save cost |
+| `AGENT_MODEL` | default `deepseek-chat`; `deepseek-reasoner` for harder tasks |
 | `BASE_BRANCH` | PR base (default `main`) |
 | `MAX_ATTEMPTS` | implement/verify retries (default 3) |
 | `DRY_RUN` / `FAKE_LLM` | demo/testing flags |

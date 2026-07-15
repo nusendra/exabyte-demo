@@ -8,8 +8,8 @@ async function main() {
     process.exit(1);
   }
 
-  if (!config.fakeLlm && !config.anthropicApiKey) {
-    console.error('Missing ANTHROPIC_API_KEY (or set FAKE_LLM=1 for a wiring test).');
+  if (!config.fakeLlm && !config.deepseekApiKey) {
+    console.error('Missing DEEPSEEK_API_KEY (or set FAKE_LLM=1 for a wiring test).');
     process.exit(1);
   }
   if (!config.fakeLlm && !config.clickupToken) {
