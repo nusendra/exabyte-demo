@@ -29,8 +29,8 @@ npm run build     # prerendered output in web/build (Netlify publish dir)
 ### Deploy to Netlify
 1. Push this repo to GitHub.
 2. Netlify → Add new site → Import from GitHub → pick the repo.
-3. Settings come from `web/netlify.toml` (base `web`, build `npm run build`,
-   publish `build`). Deploy.
+3. Settings come from `netlify.toml` at the repo root (base `web`, build
+   `npm run build`, publish `build`) — leave the UI build fields as detected. Deploy.
 4. Every merge to `main` auto-deploys.
 
 ## 2. Agent (`agent/`)
