@@ -14,7 +14,7 @@ export const config = {
   triggerStatus: process.env.CLICKUP_TRIGGER_STATUS ?? 'to do',
   inProgressStatus: process.env.CLICKUP_INPROGRESS_STATUS ?? 'in progress',
   pollIntervalMs: Number(process.env.POLL_INTERVAL_MS ?? 15000),
-  model: process.env.AGENT_MODEL ?? 'deepseek-chat',
+  model: process.env.AGENT_MODEL ?? 'deepseek-v4-flash',
   repoDir: process.env.REPO_DIR
     ? path.resolve(process.cwd(), process.env.REPO_DIR)
     : defaultRepoDir,
