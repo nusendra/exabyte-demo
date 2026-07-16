@@ -76,6 +76,9 @@ npm run watch
 # One-shot against a specific ClickUp task:
 npm run agent -- <clickup-task-id>
 
+# Revise an in-review PR from its review feedback (pushes to the same branch):
+npm run revise -- <PR-number>
+
 # Real change but skip push/PR/ClickUp writes:
 DRY_RUN=1 npm run agent -- <clickup-task-id>
 ```
@@ -86,6 +89,16 @@ DRY_RUN=1 npm run agent -- <clickup-task-id>
 `CLICKUP_INPROGRESS_STATUS` (default `in progress`), then the graph runs it to a
 PR and `in review`. The status change prevents a task being processed twice.
 Status flow: **to do → in progress → in review → (merge) complete**.
+
+### Revise mode
+When a PR is in review and you want changes: leave review comments on the PR
+(top-level, review summary, or inline), then run:
+```bash
+npm run revise -- <PR-number>
+```
+It reads all the feedback, checks out the PR branch, applies fixes with the
+model, re-runs tests + build, and pushes to the same branch (updating the PR).
+Add `DRY_RUN=1` to preview without pushing.
 
 ### Env (`agent/.env`)
 | var | purpose |

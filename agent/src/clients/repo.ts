@@ -73,3 +73,59 @@ export async function openPR(title: string, body: string): Promise<string> {
   );
   return res.stdout.trim();
 }
+
+const gh = (args: string[]) => execa('gh', args, { cwd: config.repoDir });
+
+/** Basic PR metadata. */
+export async function getPR(pr: string): Promise<{ headRefName: string; title: string }> {
+  const res = await gh(['pr', 'view', pr, '--json', 'headRefName,title']);
+  return JSON.parse(res.stdout);
+}
+
+/** Repo-relative paths of files the PR changed. */
+export async function getPRFiles(pr: string): Promise<string[]> {
+  const res = await gh(['pr', 'view', pr, '--json', 'files']);
+  const data = JSON.parse(res.stdout) as { files: { path: string }[] };
+  return data.files.map((f) => f.path);
+}
+
+/** Collect review bodies, top-level comments, and inline review comments as one string. */
+export async function getReviewFeedback(pr: string): Promise<string> {
+  const res = await gh(['pr', 'view', pr, '--json', 'comments,reviews']);
+  const data = JSON.parse(res.stdout) as {
+    comments: { body: string }[];
+    reviews: { body: string; state: string }[];
+  };
+  const parts: string[] = [];
+  for (const r of data.reviews) {
+    if (r.body?.trim()) parts.push(`[review ${r.state}] ${r.body.trim()}`);
+  }
+  for (const c of data.comments) {
+    if (c.body?.trim()) parts.push(`[comment] ${c.body.trim()}`);
+  }
+  // Inline review comments (tied to a file/line).
+  try {
+    const inline = await gh([
+      'api',
+      `repos/{owner}/{repo}/pulls/${pr}/comments`,
+      '--jq',
+      '.[] | "[inline " + .path + ":" + (.line // 0 | tostring) + "] " + .body'
+    ]);
+    if (inline.stdout.trim()) parts.push(inline.stdout.trim());
+  } catch {
+    // no inline comments / older gh — ignore
+  }
+  return parts.join('\n');
+}
+
+/** Fetch and check out an existing branch, pulling latest. */
+export async function checkoutBranch(name: string): Promise<void> {
+  await git(['fetch', 'origin', name]);
+  await git(['checkout', name]);
+  await git(['pull', '--ff-only']).catch(() => {});
+}
+
+/** Post a comment on a PR. */
+export async function commentPR(pr: string, body: string): Promise<void> {
+  await gh(['pr', 'comment', pr, '--body', body]);
+}

@@ -124,6 +124,30 @@ export async function writeTest(task: ClickUpTask, plan: Plan): Promise<FileChan
   return files;
 }
 
+/** Apply PR review feedback to the current branch. */
+export async function revise(
+  prTitle: string,
+  feedback: string,
+  currentFiles: FileChange[],
+  verifyOutput: string
+): Promise<FileChange[]> {
+  const ctx = currentFiles.map((f) => `--- ${f.path} ---\n${f.content}`).join('\n\n');
+  const { files } = await askJson(
+    changesSchema,
+    CHANGES_SHAPE,
+    'Apply the reviewer feedback to this pull request. Rules:\n' +
+      '- Return WHOLE contents of only the files you change.\n' +
+      '- Address every point in the feedback; keep unrelated code intact.\n' +
+      '- Keep the vitest suite AND the production build green. Never create a file whose ' +
+      'name starts with "+" (SvelteKit reserves those). Tests live under web/src/lib/.\n' +
+      '- Do not weaken or delete existing test assertions.',
+    `PR: ${prTitle}\n\nREVIEWER FEEDBACK:\n${feedback}\n` +
+      (verifyOutput ? `\nLATEST TEST/BUILD OUTPUT:\n${verifyOutput}\n` : '') +
+      `\nCURRENT FILES:\n${ctx}`
+  );
+  return files;
+}
+
 /** Implement the feature so the test passes. `feedback` carries prior test output. */
 export async function implement(
   task: ClickUpTask,
