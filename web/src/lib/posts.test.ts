@@ -127,6 +127,43 @@ describe('posts', () => {
     expect(slugs).toContain('importance-of-ai-agent-for-developers');
   });
 
+  // --- New blog post: 'Exabyte Demo' ---
+
+  it('includes the new \'Exabyte Demo\' post in getAllPosts', () => {
+    const posts = getAllPosts();
+    const newPost = posts.find((p) => p.slug === 'exabyte-demo');
+    expect(newPost).toBeDefined();
+  });
+
+  it('the new Exabyte Demo post has all required fields', () => {
+    const post = getPost('exabyte-demo');
+    expect(post).toBeDefined();
+    expect(post!.title).toBeTypeOf('string');
+    expect(post!.title.length).toBeGreaterThan(0);
+    expect(post!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(post!.tags).toBeInstanceOf(Array);
+    expect(post!.excerpt).toBeTypeOf('string');
+    expect(post!.excerpt.length).toBeGreaterThan(0);
+    expect(post!.body).toBeTypeOf('string');
+    expect(post!.body.length).toBeGreaterThan(0);
+  });
+
+  it('the new Exabyte Demo post has the correct title', () => {
+    const post = getPost('exabyte-demo');
+    expect(post?.title).toBe('Exabyte Demo');
+  });
+
+  it('finds the new Exabyte Demo post by its slug', () => {
+    const post = getPost('exabyte-demo');
+    expect(post?.slug).toBe('exabyte-demo');
+  });
+
+  it('the new Exabyte Demo post appears in the sorted list', () => {
+    const posts = getAllPosts();
+    const slugs = posts.map((p) => p.slug);
+    expect(slugs).toContain('exabyte-demo');
+  });
+
   // --- Background color constant ---
 
   it('BACKGROUND_COLOR is a valid hex color', () => {
