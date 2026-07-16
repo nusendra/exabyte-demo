@@ -1,10 +1,12 @@
 <script lang="ts">
   import type { PageData } from './$types';
+  import { BACKGROUND_COLOR } from '$lib/posts';
   let { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>
   <title>Exabyte Blog</title>
+  <style>body { background-color: {BACKGROUND_COLOR}; }</style>
 </svelte:head>
 
 <ul class="posts">

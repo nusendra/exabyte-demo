@@ -20,3 +20,6 @@ export function getAllPosts(): Post[] {
 export function getPost(slug: string): Post | undefined {
   return posts.find((p) => p.slug === slug);
 }
+
+/** Background color for the page body. */
+export const BACKGROUND_COLOR = '#f5f5f5';
