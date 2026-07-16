@@ -90,6 +90,43 @@ describe('posts', () => {
     expect(slugs).toContain('why-developers-should-learn-about-ai');
   });
 
+  // --- New blog post: 'The Importance of Implementing an AI Agent for Developers' ---
+
+  it('includes the new \'The Importance of Implementing an AI Agent for Developers\' post in getAllPosts', () => {
+    const posts = getAllPosts();
+    const newPost = posts.find((p) => p.slug === 'importance-of-ai-agent-for-developers');
+    expect(newPost).toBeDefined();
+  });
+
+  it('the new importance-of-ai-agent post has all required fields', () => {
+    const post = getPost('importance-of-ai-agent-for-developers');
+    expect(post).toBeDefined();
+    expect(post!.title).toBeTypeOf('string');
+    expect(post!.title.length).toBeGreaterThan(0);
+    expect(post!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(post!.tags).toBeInstanceOf(Array);
+    expect(post!.excerpt).toBeTypeOf('string');
+    expect(post!.excerpt.length).toBeGreaterThan(0);
+    expect(post!.body).toBeTypeOf('string');
+    expect(post!.body.length).toBeGreaterThan(0);
+  });
+
+  it('the new importance-of-ai-agent post has the correct title', () => {
+    const post = getPost('importance-of-ai-agent-for-developers');
+    expect(post?.title).toBe('The Importance of Implementing an AI Agent for Developers');
+  });
+
+  it('finds the new importance-of-ai-agent post by its slug', () => {
+    const post = getPost('importance-of-ai-agent-for-developers');
+    expect(post?.slug).toBe('importance-of-ai-agent-for-developers');
+  });
+
+  it('the new importance-of-ai-agent post appears in the sorted list', () => {
+    const posts = getAllPosts();
+    const slugs = posts.map((p) => p.slug);
+    expect(slugs).toContain('importance-of-ai-agent-for-developers');
+  });
+
   // --- Background color constant ---
 
   it('BACKGROUND_COLOR is a valid hex color', () => {
