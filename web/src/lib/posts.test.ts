@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getAllPosts, getPost } from './posts';
+import { getAllPosts, getPost, BACKGROUND_COLOR } from './posts';
 
 describe('posts', () => {
   it('returns all seed posts', () => {
@@ -88,5 +88,11 @@ describe('posts', () => {
     const posts = getAllPosts();
     const slugs = posts.map((p) => p.slug);
     expect(slugs).toContain('why-developers-should-learn-about-ai');
+  });
+
+  // --- Background color constant ---
+
+  it('BACKGROUND_COLOR is a valid hex color', () => {
+    expect(BACKGROUND_COLOR).toMatch(/^#[0-9a-fA-F]{6}$/);
   });
 });
