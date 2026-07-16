@@ -35,9 +35,9 @@ async function reviseOpenPRs() {
   const prs = await listOpenAgentPRs();
   for (const { number, branch } of prs) {
     if (prInFlight.has(number)) continue;
-    const { lastReview, lastCommit } = await getPRActivity(String(number));
-    // Act only when a review landed after the most recent code push.
-    if (lastReview !== null && (lastCommit === null || lastReview > lastCommit)) {
+    const { lastFeedback, lastCommit } = await getPRActivity(String(number));
+    // Act only when human feedback landed after the most recent code push.
+    if (lastFeedback !== null && (lastCommit === null || lastFeedback > lastCommit)) {
       prInFlight.add(number);
       console.log(`\n📝 PR #${number} has new review feedback`);
       try {

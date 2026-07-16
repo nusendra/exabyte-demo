@@ -139,24 +139,49 @@ export async function listOpenAgentPRs(): Promise<{ number: number; branch: stri
     .map((p) => ({ number: p.number, branch: p.headRefName }));
 }
 
+// Comment authors whose messages should never trigger a revision.
+const IGNORED_AUTHORS = new Set(['netlify', 'github-actions', 'dependabot']);
+
+function isHumanFeedback(login: string | undefined, body: string | undefined): boolean {
+  const name = (login ?? '').toLowerCase();
+  if (IGNORED_AUTHORS.has(name) || name.endsWith('[bot]')) return false;
+  // The agent's own PR comments start with the robot emoji — don't loop on them.
+  if ((body ?? '').trimStart().startsWith('🤖')) return false;
+  return true;
+}
+
 /**
- * Timestamps (ms) of the newest human review and newest commit on a PR.
- * Used to detect review feedback that arrived after the last code push.
+ * Timestamps (ms) of the newest human feedback (review OR plain comment) and
+ * newest commit on a PR. Feedback newer than the last commit triggers a revise.
  */
 export async function getPRActivity(
   pr: string
-): Promise<{ lastReview: number | null; lastCommit: number | null }> {
-  const res = await gh(['pr', 'view', pr, '--json', 'reviews,commits']);
+): Promise<{ lastFeedback: number | null; lastCommit: number | null }> {
+  const res = await gh(['pr', 'view', pr, '--json', 'reviews,comments,commits']);
   const data = JSON.parse(res.stdout) as {
-    reviews: { submittedAt?: string }[];
+    reviews: { submittedAt?: string; body?: string; author?: { login?: string } }[];
+    comments: { createdAt?: string; body?: string; author?: { login?: string } }[];
     commits: { committedDate?: string }[];
   };
-  const times = (xs: (string | undefined)[]) =>
-    xs.filter((s): s is string => !!s).map((s) => Date.parse(s));
-  const rev = times(data.reviews.map((r) => r.submittedAt));
-  const com = times(data.commits.map((c) => c.committedDate));
+
+  const feedbackTimes: number[] = [];
+  for (const r of data.reviews) {
+    if (r.submittedAt && isHumanFeedback(r.author?.login, r.body)) {
+      feedbackTimes.push(Date.parse(r.submittedAt));
+    }
+  }
+  for (const c of data.comments) {
+    if (c.createdAt && isHumanFeedback(c.author?.login, c.body)) {
+      feedbackTimes.push(Date.parse(c.createdAt));
+    }
+  }
+  const commitTimes = data.commits
+    .map((c) => c.committedDate)
+    .filter((s): s is string => !!s)
+    .map((s) => Date.parse(s));
+
   return {
-    lastReview: rev.length ? Math.max(...rev) : null,
-    lastCommit: com.length ? Math.max(...com) : null
+    lastFeedback: feedbackTimes.length ? Math.max(...feedbackTimes) : null,
+    lastCommit: commitTimes.length ? Math.max(...commitTimes) : null
   };
 }

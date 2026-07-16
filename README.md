@@ -92,14 +92,14 @@ Status flow: **to do → in progress → in review → (merge) complete**.
 
 ### Revise (automatic, same watcher)
 `npm run watch` also handles review feedback — you only run **one** CLI.
-Each poll it checks open agent PRs: if the newest review is newer than the
-last commit, it reads the feedback, applies fixes, keeps tests + build green,
-and pushes to the same branch. Pushing makes the last commit newest again, so
-it stops until the next review arrives.
+Each poll it checks open agent PRs: if the newest human feedback is newer than
+the last commit, it reads the feedback, applies fixes, keeps tests + build
+green, and pushes to the same branch. Pushing makes the last commit newest
+again, so it stops until the next comment arrives.
 
-So to request changes: on the in-review PR click **Review changes → Request
-changes / Comment** (top-level or inline), then leave the watcher running — it
-revises within one poll.
+To request changes: just comment on the PR (a plain conversation comment, a
+review summary, or inline all work). Bot comments (Netlify, etc.) and the
+agent's own `🤖` comments are ignored so it never loops on itself.
 
 Manual one-off (optional): `npm run revise -- <PR-number>` does the same for a
 single PR. Add `DRY_RUN=1` to preview without pushing.
