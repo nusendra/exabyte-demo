@@ -129,3 +129,34 @@ export async function checkoutBranch(name: string): Promise<void> {
 export async function commentPR(pr: string, body: string): Promise<void> {
   await gh(['pr', 'comment', pr, '--body', body]);
 }
+
+/** Open PRs that came from an agent branch. */
+export async function listOpenAgentPRs(): Promise<{ number: number; branch: string }[]> {
+  const res = await gh(['pr', 'list', '--state', 'open', '--json', 'number,headRefName']);
+  const data = JSON.parse(res.stdout) as { number: number; headRefName: string }[];
+  return data
+    .filter((p) => p.headRefName.startsWith('agent/task-'))
+    .map((p) => ({ number: p.number, branch: p.headRefName }));
+}
+
+/**
+ * Timestamps (ms) of the newest human review and newest commit on a PR.
+ * Used to detect review feedback that arrived after the last code push.
+ */
+export async function getPRActivity(
+  pr: string
+): Promise<{ lastReview: number | null; lastCommit: number | null }> {
+  const res = await gh(['pr', 'view', pr, '--json', 'reviews,commits']);
+  const data = JSON.parse(res.stdout) as {
+    reviews: { submittedAt?: string }[];
+    commits: { committedDate?: string }[];
+  };
+  const times = (xs: (string | undefined)[]) =>
+    xs.filter((s): s is string => !!s).map((s) => Date.parse(s));
+  const rev = times(data.reviews.map((r) => r.submittedAt));
+  const com = times(data.commits.map((c) => c.committedDate));
+  return {
+    lastReview: rev.length ? Math.max(...rev) : null,
+    lastCommit: com.length ? Math.max(...com) : null
+  };
+}
