@@ -7,15 +7,20 @@ import type { ClickUpTask, FileChange, Plan } from './state.js';
 
 function model() {
   if (config.provider === 'anthropic') {
-    return new ChatAnthropic({
+    const m = new ChatAnthropic({
       model: config.model,
       apiKey: config.anthropicApiKey,
-      temperature: 0,
-      // Newer model names (sonnet-5, opus-4-8) fall outside @langchain/anthropic's
-      // default handling, which otherwise sends top_p: -1 and the API rejects it.
-      topP: 1,
       maxTokens: 8000
     });
+    // Newer models (claude-sonnet-5, opus-4-8) deprecate temperature and reject
+    // @langchain/anthropic's default sampling sentinels (top_p/top_k = -1). This
+    // langchain version only omits them for a hardcoded model list that excludes
+    // these names, so strip all three here — the API then uses its own defaults.
+    const p = m as unknown as { temperature?: number; topP?: number; topK?: number };
+    p.temperature = undefined;
+    p.topP = undefined;
+    p.topK = undefined;
+    return m;
   }
   return new ChatDeepSeek({
     model: config.model,
