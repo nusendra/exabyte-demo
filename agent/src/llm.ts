@@ -1,3 +1,4 @@
+import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatDeepSeek } from '@langchain/deepseek';
 import { z } from 'zod';
 import { config } from './config.js';
@@ -5,6 +6,14 @@ import { readFile } from './clients/repo.js';
 import type { ClickUpTask, FileChange, Plan } from './state.js';
 
 function model() {
+  if (config.provider === 'anthropic') {
+    return new ChatAnthropic({
+      model: config.model,
+      apiKey: config.anthropicApiKey,
+      temperature: 0,
+      maxTokens: 8000
+    });
+  }
   return new ChatDeepSeek({
     model: config.model,
     apiKey: config.deepseekApiKey,

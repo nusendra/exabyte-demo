@@ -60,10 +60,24 @@ fetchTask → planChange → prepareBranch → writeTest → implement → verif
 ```bash
 cd agent
 npm install
-cp .env.example .env    # fill in DEEPSEEK_API_KEY + CLICKUP_TOKEN
+cp .env.example .env    # fill in the provider key + CLICKUP_TOKEN
 ```
 
 Needs the GitHub CLI authenticated for PRs: `gh auth login`.
+
+### LLM provider (DeepSeek or Anthropic)
+The agent is provider-agnostic (plain-JSON output, no forced tool calls). Choose
+in `.env`:
+```bash
+# DeepSeek (default)
+AGENT_PROVIDER=deepseek
+DEEPSEEK_API_KEY=...
+
+# or Anthropic
+AGENT_PROVIDER=anthropic
+ANTHROPIC_API_KEY=...
+AGENT_MODEL=claude-sonnet-5     # optional; default for anthropic
+```
 
 ### Run
 ```bash
@@ -107,7 +121,9 @@ single PR. Add `DRY_RUN=1` to preview without pushing.
 ### Env (`agent/.env`)
 | var | purpose |
 |-----|---------|
-| `DEEPSEEK_API_KEY` | DeepSeek model for plan/test/implement |
+| `AGENT_PROVIDER` | `deepseek` (default) or `anthropic` |
+| `DEEPSEEK_API_KEY` | key if provider is deepseek |
+| `ANTHROPIC_API_KEY` | key if provider is anthropic |
 | `CLICKUP_TOKEN` | ClickUp personal token (`pk_...`) |
 | `CLICKUP_LIST_ID` | list the watcher polls (watch mode) |
 | `CLICKUP_TASK_STATUS_REVIEW` | status to move task to after PR (default `in review`) |

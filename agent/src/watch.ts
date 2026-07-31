@@ -1,4 +1,4 @@
-import { config } from './config.js';
+import { activeApiKey, config } from './config.js';
 import * as clickup from './clients/clickup.js';
 import { getPRActivity, listOpenAgentPRs } from './clients/repo.js';
 import { buildGraph } from './graph.js';
@@ -66,8 +66,8 @@ async function tick() {
 }
 
 async function main() {
-  if (!config.fakeLlm && !config.deepseekApiKey) {
-    console.error('Missing DEEPSEEK_API_KEY.');
+  if (!config.fakeLlm && !activeApiKey) {
+    console.error(`Missing API key for provider "${config.provider}".`);
     process.exit(1);
   }
   if (!config.clickupToken) {

@@ -1,4 +1,4 @@
-import { config } from './config.js';
+import { activeApiKey, config } from './config.js';
 import { revisePR } from './revise-core.js';
 
 // Manually revise one PR from its review feedback.
@@ -10,8 +10,8 @@ async function main() {
     console.error('Usage: npm run revise -- <PR-number>');
     process.exit(1);
   }
-  if (!config.deepseekApiKey) {
-    console.error('Missing DEEPSEEK_API_KEY.');
+  if (!activeApiKey) {
+    console.error(`Missing API key for provider "${config.provider}".`);
     process.exit(1);
   }
 

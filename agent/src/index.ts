@@ -1,4 +1,4 @@
-import { config } from './config.js';
+import { activeApiKey, config } from './config.js';
 import { buildGraph } from './graph.js';
 
 async function main() {
@@ -8,8 +8,10 @@ async function main() {
     process.exit(1);
   }
 
-  if (!config.fakeLlm && !config.deepseekApiKey) {
-    console.error('Missing DEEPSEEK_API_KEY (or set FAKE_LLM=1 for a wiring test).');
+  if (!config.fakeLlm && !activeApiKey) {
+    console.error(
+      `Missing API key for provider "${config.provider}" (or set FAKE_LLM=1 for a wiring test).`
+    );
     process.exit(1);
   }
   if (!config.fakeLlm && !config.clickupToken) {
