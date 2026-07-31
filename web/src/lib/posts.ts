@@ -23,3 +23,18 @@ export function getPost(slug: string): Post | undefined {
 
 /** Background color for the page body. */
 export const BACKGROUND_COLOR = '#f5fff5';
+
+/** Title shown in the hero section. */
+export const HERO_TITLE = "Nusendra's Blog";
+
+export interface NavItem {
+  label: string;
+  href: string;
+}
+
+/** Nav menu items shown in the hero section. */
+export const HERO_NAV_ITEMS: NavItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/' },
+  { label: 'About me', href: '/' }
+];
