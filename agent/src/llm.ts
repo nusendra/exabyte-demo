@@ -11,6 +11,9 @@ function model() {
       model: config.model,
       apiKey: config.anthropicApiKey,
       temperature: 0,
+      // Newer model names (sonnet-5, opus-4-8) fall outside @langchain/anthropic's
+      // default handling, which otherwise sends top_p: -1 and the API rejects it.
+      topP: 1,
       maxTokens: 8000
     });
   }
