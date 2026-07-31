@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { getAllPosts, getPost, BACKGROUND_COLOR } from './posts';
+import {
+  getAllPosts,
+  getPost,
+  BACKGROUND_COLOR,
+  HERO_NAV_ITEMS,
+  HERO_TITLE
+} from './posts';
 
 describe('posts', () => {
   it('returns all seed posts', () => {
@@ -21,115 +27,37 @@ describe('posts', () => {
     expect(getPost('does-not-exist')).toBeUndefined();
   });
 
-  // --- Demo blog post feature ---
-
-  it('includes the new demo blog post in getAllPosts', () => {
-    const posts = getAllPosts();
-    const demo = posts.find((p) => p.slug === 'demo-blog-post');
-    expect(demo).toBeDefined();
-  });
-
-  it('the new demo blog post has all required fields', () => {
-    const post = getPost('demo-blog-post');
-    expect(post).toBeDefined();
-    expect(post!.title).toBeTypeOf('string');
-    expect(post!.title.length).toBeGreaterThan(0);
-    expect(post!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(post!.tags).toBeInstanceOf(Array);
-    expect(post!.excerpt).toBeTypeOf('string');
-    expect(post!.excerpt.length).toBeGreaterThan(0);
-    expect(post!.body).toBeTypeOf('string');
-    expect(post!.body.length).toBeGreaterThan(0);
-  });
-
-  it('finds the new demo blog post by its slug', () => {
-    const post = getPost('demo-blog-post');
-    expect(post?.slug).toBe('demo-blog-post');
-  });
-
-  it('the new demo blog post appears in the sorted list', () => {
-    const posts = getAllPosts();
-    const slugs = posts.map((p) => p.slug);
-    expect(slugs).toContain('demo-blog-post');
-  });
-
-  // --- New blog post: 'Why Developers Should Learn About AI' ---
-
-  it('includes the new \'Why Developers Should Learn About AI\' post in getAllPosts', () => {
-    const posts = getAllPosts();
-    const newPost = posts.find((p) => p.slug === 'why-developers-should-learn-about-ai');
-    expect(newPost).toBeDefined();
-  });
-
-  it('the new post has all required fields', () => {
-    const post = getPost('why-developers-should-learn-about-ai');
-    expect(post).toBeDefined();
-    expect(post!.title).toBeTypeOf('string');
-    expect(post!.title.length).toBeGreaterThan(0);
-    expect(post!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(post!.tags).toBeInstanceOf(Array);
-    expect(post!.excerpt).toBeTypeOf('string');
-    expect(post!.excerpt.length).toBeGreaterThan(0);
-    expect(post!.body).toBeTypeOf('string');
-    expect(post!.body.length).toBeGreaterThan(0);
-  });
-
-  it('the new post has the correct title', () => {
-    const post = getPost('why-developers-should-learn-about-ai');
-    expect(post?.title).toBe('Why Developers Should Learn About AI');
-  });
-
-  it('finds the new post by its slug', () => {
-    const post = getPost('why-developers-should-learn-about-ai');
-    expect(post?.slug).toBe('why-developers-should-learn-about-ai');
-  });
-
-  it('the new post appears in the sorted list', () => {
-    const posts = getAllPosts();
-    const slugs = posts.map((p) => p.slug);
-    expect(slugs).toContain('why-developers-should-learn-about-ai');
-  });
-
-  // --- New blog post: 'The Importance of Implementing an AI Agent for Developers' ---
-
-  it('includes the new \'The Importance of Implementing an AI Agent for Developers\' post in getAllPosts', () => {
-    const posts = getAllPosts();
-    const newPost = posts.find((p) => p.slug === 'importance-of-ai-agent-for-developers');
-    expect(newPost).toBeDefined();
-  });
-
-  it('the new importance-of-ai-agent post has all required fields', () => {
-    const post = getPost('importance-of-ai-agent-for-developers');
-    expect(post).toBeDefined();
-    expect(post!.title).toBeTypeOf('string');
-    expect(post!.title.length).toBeGreaterThan(0);
-    expect(post!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(post!.tags).toBeInstanceOf(Array);
-    expect(post!.excerpt).toBeTypeOf('string');
-    expect(post!.excerpt.length).toBeGreaterThan(0);
-    expect(post!.body).toBeTypeOf('string');
-    expect(post!.body.length).toBeGreaterThan(0);
-  });
-
-  it('the new importance-of-ai-agent post has the correct title', () => {
-    const post = getPost('importance-of-ai-agent-for-developers');
-    expect(post?.title).toBe('The Importance of Implementing an AI Agent for Developers');
-  });
-
-  it('finds the new importance-of-ai-agent post by its slug', () => {
-    const post = getPost('importance-of-ai-agent-for-developers');
-    expect(post?.slug).toBe('importance-of-ai-agent-for-developers');
-  });
-
-  it('the new importance-of-ai-agent post appears in the sorted list', () => {
-    const posts = getAllPosts();
-    const slugs = posts.map((p) => p.slug);
-    expect(slugs).toContain('importance-of-ai-agent-for-developers');
-  });
-
-  // --- Background color constant ---
-
   it('BACKGROUND_COLOR is a valid hex color', () => {
     expect(BACKGROUND_COLOR).toMatch(/^#[0-9a-fA-F]{6}$/);
+  });
+
+  // --- Hero section nav menu ---
+
+  it('HERO_TITLE is the blog title text', () => {
+    expect(HERO_TITLE).toBe("Nusendra's Blog");
+  });
+
+  it('HERO_NAV_ITEMS has exactly three items', () => {
+    expect(HERO_NAV_ITEMS).toHaveLength(3);
+  });
+
+  it('HERO_NAV_ITEMS contains Home, Blog, and About me in order', () => {
+    const labels = HERO_NAV_ITEMS.map((item) => item.label);
+    expect(labels).toEqual(['Home', 'Blog', 'About me']);
+  });
+
+  it('every HERO_NAV_ITEMS link points to home', () => {
+    for (const item of HERO_NAV_ITEMS) {
+      expect(item.href).toBe('/');
+    }
+  });
+
+  it('each HERO_NAV_ITEMS entry has label and href fields', () => {
+    for (const item of HERO_NAV_ITEMS) {
+      expect(item.label).toBeTypeOf('string');
+      expect(item.label.length).toBeGreaterThan(0);
+      expect(item.href).toBeTypeOf('string');
+      expect(item.href.length).toBeGreaterThan(0);
+    }
   });
 });

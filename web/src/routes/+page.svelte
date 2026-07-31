@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { BACKGROUND_COLOR } from '$lib/posts';
+  import { BACKGROUND_COLOR, HERO_TITLE, HERO_NAV_ITEMS } from '$lib/posts';
   let { data }: { data: PageData } = $props();
 </script>
 
@@ -8,6 +8,17 @@
   <title>Exabyte Blog</title>
   <style>body { background-color: {BACKGROUND_COLOR}; }</style>
 </svelte:head>
+
+<section class="hero">
+  <nav class="hero-nav">
+    <ul>
+      {#each HERO_NAV_ITEMS as item (item.label)}
+        <li><a href={item.href}>{item.label}</a></li>
+      {/each}
+    </ul>
+  </nav>
+  <h1 class="hero-title">{HERO_TITLE}</h1>
+</section>
 
 <ul class="posts">
   {#each data.posts as post (post.slug)}
@@ -22,6 +33,33 @@
 </ul>
 
 <style>
+  .hero {
+    background-color: #f0f0f0;
+    padding: 2rem 1.25rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    padding: 0;
+    margin: 0 0 1.5rem;
+  }
+  .hero-nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .hero-nav a:hover {
+    color: #000;
+  }
+  .hero-title {
+    margin: 0;
+    font-size: 2rem;
+    color: #222;
+  }
   .posts {
     list-style: none;
     padding: 0;
