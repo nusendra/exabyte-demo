@@ -76,7 +76,7 @@ DEEPSEEK_API_KEY=...
 # or Anthropic
 AGENT_PROVIDER=anthropic
 ANTHROPIC_API_KEY=...
-AGENT_MODEL=claude-sonnet-5     # optional; default for anthropic
+AGENT_MODEL=claude-opus-5       # optional; default for anthropic is claude-sonnet-5
 ```
 
 ### Run
