@@ -36,5 +36,5 @@ export interface NavItem {
 export const HERO_NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Blog', href: '/' },
-  { label: 'About me', href: '/' }
+  { label: 'About Us', href: '/' }
 ];

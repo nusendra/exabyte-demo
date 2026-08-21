@@ -41,9 +41,9 @@ describe('posts', () => {
     expect(HERO_NAV_ITEMS).toHaveLength(3);
   });
 
-  it('HERO_NAV_ITEMS contains Home, Blog, and About me in order', () => {
+  it('HERO_NAV_ITEMS contains Home, Blog, and About Us in order', () => {
     const labels = HERO_NAV_ITEMS.map((item) => item.label);
-    expect(labels).toEqual(['Home', 'Blog', 'About me']);
+    expect(labels).toEqual(['Home', 'Blog', 'About Us']);
   });
 
   it('every HERO_NAV_ITEMS link points to home', () => {
